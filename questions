@@ -1,0 +1,6 @@
+How to keep track on where things are linked? Between constructors and methods?
+How to connect the various parts for each constructor and its instances.
+When working on a project, what determines when you should use a constructor function. 
+Say we have a method to create a drink; however, we're using a separate method to determine what drink will be made. For example, we're trying create a drink based of off a user's preference method, and list of ingredient method.
+Also, how do we manage different inputs from multiple people, regarding how to approach a particular coding issue? 
+How do you approach a project, with the mindset of creating with object oriented programming. 

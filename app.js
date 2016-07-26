@@ -1,21 +1,58 @@
-
-//object 
-var kindOfDrinks = {
+//This is an object that contains properties that has the value of the type of drink we want. 
+var attributes = {
     STRONG: 'STRONG',
     SALTY: 'SALTY',
     BITTER: 'BITTER',
     SWEET: 'SWEET',
     FRUITY: 'FRUITY'
-
 };
 
-//constructor
-var Bartender = function() {
-    this.questionList = new QuestionList();
+var bartender = new Bartender(myQuestionList);
+var bartender = {
+    this.questionList = myQuestionList,
+    this.createDrink = function () {
+        var order = new Order();
+        var questions = this.questionList.questions;
+        for (var i=0; i<questions.length; i++) {
+        var question = questions[i];
+        var preference = question.getPreference();
+        order.addPreference(preference);
+    }
+    return order;
 };
 
-//method prototype
-Bartender.prototype.takeOrder = function() {
+var order = new Order();
+var order = {
+    this.preferences = {}; 
+    this.addPreference = function(preference) {
+        this.preferences[preference.attribute] = preference;
+};
+ 
+
+var Preference = function(attribute, isLiked) {
+    this.attribute = attribute;
+    this.isLiked = isLiked;
+};
+
+var preference = new Preference(attribute, isLiked);    
+
+var preference {
+    this.attribute = attribute,
+    this.isLiked = isLiked
+}
+
+
+
+// This is constructor function that produces the questions.
+
+
+
+function Bartender(myQuestionList) {
+    this.questionList = myQuestionList;
+}
+
+// This is a method prototype that adds a behaviour to each question object. 
+Bartender.prototype.createDrink = function() {
     var order = new Order();
     var questions = this.questionList.questions;
     for (var i=0; i<questions.length; i++) {
@@ -26,25 +63,22 @@ Bartender.prototype.takeOrder = function() {
     return order;
 };
 
-//constructor
-var Question = function(kindOfDrink, text) {
-    this.kindOfDrink = kindOfDrink;
+var Question = function(attribute, text) {
+    this.attribute = attribute;
     this.text = text;
 };
 
-//method prototype
 Question.prototype.getPreference = function() {
     // TODO: Find a better way to get access to the select
-    var select = $('.' + this.kindOfDrink);
+    var select = $('.' + this.attribute);
     var isLiked = select.val() === "true";
-    var preference = new Preference(this.kindOfDrink, isLiked);
+    var preference = new Preference(this.attribute, isLiked);
     return preference;
 };
 
-//method prototype
 Question.prototype.asHTML = function() {
     var select = (
-        '<select class="' + this.kindOfDrink + '">' +
+        '<select class="' + this.attribute + '">' +
             '<option value="true">Aye</option>' +
             '<option value="false">Nay</option>' +
         '</select>'
@@ -52,58 +86,54 @@ Question.prototype.asHTML = function() {
     return '<li>' + this.text + ' ' + select + '</li>';
 };
 
-//constructor
 var QuestionList = function() {
     this.questions = [];
 };
 
-//method prototype
 QuestionList.prototype.addQuestion = function(question) {
     this.questions.push(question);
 };
 
-//method prototype
 QuestionList.prototype.asHTML = function() {
     return this.questions.reduce(function(prev, question) {
         return prev + question.asHTML();
     }, '');
 };
 
-//constructor
 var Order = function() {
     this.preferences = {};
 };
 
-//method prototype
 Order.prototype.addPreference = function(preference) {
-    this.preferences[preference.kindOfDrink] = preference;
+    this.preferences[preference.attribute] = preference;
 };
 
-//constructor
-var Preference = function(kindOfDrink, isLiked) {
-    this.kindOfDrink = kindOfDrink; // Whether it is strong, salty etc.
+var Preference = function(attribute, isLiked) {
+    this.attribute = attribute; // Whether it is strong, salty etc.
     this.isLiked = isLiked;
 };
 
 $(document).ready(function() {
-    var bartender = new Bartender();
+    var questionList = new QuestionList();
 
-    var strongQuestion = new Question(kindOfDrinks.STRONG, 'Do ye like yer drinks strong?');
-    var saltyQuestion = new Question(kindOfDrinks.SALTY, 'Do ye like it with a salty tang?');
-    var bitterQuestion = new Question(kindOfDrinks.BITTER, 'Are ye a lubber who likes it bitter?');
-    var sweetQuestion = new Question(kindOfDrinks.SWEET, 'Would ye like a bit of sweetness with yer poison?');
-    var fruityQuestion = new Question(kindOfDrinks.FRUITY, 'Are ye one for a fruity finish?');
+    var strongQuestion = new Question(attributes.STRONG, 'Do ye like yer drinks strong?');
+    var saltyQuestion = new Question(attributes.SALTY, 'Do ye like it with a salty tang?');
+    var bitterQuestion = new Question(attributes.BITTER, 'Are ye a lubber who likes it bitter?');
+    var sweetQuestion = new Question(attributes.SWEET, 'Would ye like a bit of sweetness with yer poison?');
+    var fruityQuestion = new Question(attributes.FRUITY, 'Are ye one for a fruity finish?');
 
-    bartender.questionList.addQuestion(strongQuestion);
-    bartender.questionList.addQuestion(saltyQuestion);
-    bartender.questionList.addQuestion(bitterQuestion);
-    bartender.questionList.addQuestion(sweetQuestion);
-    bartender.questionList.addQuestion(fruityQuestion);
+    questionList.addQuestion(strongQuestion);
+    questionList.addQuestion(saltyQuestion);
+    questionList.addQuestion(bitterQuestion);
+    questionList.addQuestion(sweetQuestion);
+    questionList.addQuestion(fruityQuestion);
+
+    var bartender = new Bartender(questionList);    
 
     $('.question-list').html(bartender.questionList.asHTML());
 
     $('.place-order').click(function() {
-        var order = bartender.takeOrder();
+        var order = bartender.createDrink();
         console.log(order);
     });
 
